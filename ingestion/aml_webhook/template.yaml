@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AML / PEP screening webhook (Source #3, SPEC.md §2). API Gateway (proxy) ->
+  Lambda that HMAC-verifies the callback and lands normalised Parquet in
+  s3://wio-credit-decision-${Env}/bronze/aml/.
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues: [dev, pre, prod]
+    Default: dev
+  BucketName:
+    Type: String
+    Description: Bronze/silver/gold bucket; defaults to the SPEC naming.
+    Default: ""
+  HmacSecretSsmPath:
+    Type: String
+    Description: SSM SecureString path holding the webhook HMAC signing secret.
+    Default: /credit/dev/aml/webhook-hmac-secret
+  PyArrowLayerArn:
+    Type: String
+    Description: >
+      ARN of a Lambda layer that provides pyarrow for Python 3.11 (e.g. a published
+      AWSSDKPandas / custom pyarrow layer). Keeps the function zip small.
+    Default: ""
+
+Conditions:
+  HasBucketOverride: !Not [!Equals [!Ref BucketName, ""]]
+  HasPyArrowLayer: !Not [!Equals [!Ref PyArrowLayerArn, ""]]
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 30
+    MemorySize: 512
+    Tracing: Active
+
+Resources:
+  AmlWebhookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub credit-aml-webhook-${Env}
+      Handler: aml_webhook_handler.handler
+      CodeUri: .
+      Layers:
+        - !If [HasPyArrowLayer, !Ref PyArrowLayerArn, !Ref AWS::NoValue]
+      Environment:
+        Variables:
+          ENV: !Ref Env
+          S3_BUCKET: !If
+            - HasBucketOverride
+            - !Ref BucketName
+            - !Sub wio-credit-decision-${Env}
+          AML_WEBHOOK_HMAC_SECRET_SSM_PATH: !Ref HmacSecretSsmPath
+          LOG_LEVEL: INFO
+      Policies:
+        - S3WritePolicy:
+            BucketName: !If
+              - HasBucketOverride
+              - !Ref BucketName
+              - !Sub wio-credit-decision-${Env}
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ssm:GetParameter
+              # HmacSecretSsmPath begins with '/', so append directly to 'parameter'.
+              Resource: !Sub arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${HmacSecretSsmPath}
+      Events:
+        AmlWebhook:
+          Type: Api
+          Properties:
+            RestApiId: !Ref AmlWebhookApi
+            Path: /aml/callback
+            Method: post
+
+  AmlWebhookApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub credit-aml-webhook-api-${Env}
+      StageName: !Ref Env
+      EndpointConfiguration:
+        Type: REGIONAL
+      # Access logging + throttling; auth is HMAC in-handler (provider signs the body).
+      MethodSettings:
+        - ResourcePath: /*
+          HttpMethod: '*'
+          ThrottlingBurstLimit: 200
+          ThrottlingRateLimit: 100
+
+Outputs:
+  WebhookUrl:
+    Description: POST AML callbacks here (provider must send X-Aml-Signature).
+    Value: !Sub https://${AmlWebhookApi}.execute-api.${AWS::Region}.amazonaws.com/${Env}/aml/callback
+  FunctionArn:
+    Value: !GetAtt AmlWebhookFunction.Arn

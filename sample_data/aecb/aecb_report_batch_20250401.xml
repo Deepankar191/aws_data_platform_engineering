@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sample AECB (Al Etihad Credit Bureau) batch credit-report file.
+  Source #1 (SPEC.md §2): Batch SFTP, XML, native match key = emirates_id.
+  Parsed by ingestion/aecb_sftp/aecb_sftp_ingest.py -> bronze/aecb/ingest_date=YYYY-MM-DD/
+  emirates_id is PII Level 1. Money (TotalOutstandingAED) is DECIMAL(18,2).
+  Each <CreditReport> ties back to customer_profile_seed.sql by EmiratesId.
+-->
+<AECBCreditReportBatch xmlns="urn:aecb:creditreport:v1">
+  <BatchHeader>
+    <BatchId>AECB-BATCH-20250401-0001</BatchId>
+    <GeneratedTimestamp>2025-04-01T02:00:00+04:00</GeneratedTimestamp>
+    <RecordCount>7</RecordCount>
+    <Environment>PROD</Environment>
+  </BatchHeader>
+
+  <CreditReport>
+    <ReportRef>AECB-RPT-20250401-000001</ReportRef>
+    <ReportDate>2025-04-01</ReportDate>
+    <Subject>
+      <EmiratesId>784-1988-1234567-1</EmiratesId>
+      <FullName>Ahmed Al Mansoori</FullName>
+      <DateOfBirth>1988-03-14</DateOfBirth>
+    </Subject>
+    <CreditScore>742</CreditScore>
+    <TotalOutstandingAED>152300.50</TotalOutstandingAED>
+    <ActiveLoans>3</ActiveLoans>
+  </CreditReport>
+
+  <CreditReport>
+    <ReportRef>AECB-RPT-20250401-000002</ReportRef>
+    <ReportDate>2025-04-01</ReportDate>
+    <Subject>
+      <EmiratesId>784-1992-2345678-2</EmiratesId>
+      <FullName>Fatima Hassan</FullName>
+      <DateOfBirth>1992-07-22</DateOfBirth>
+    </Subject>
+    <CreditScore>688</CreditScore>
+    <TotalOutstandingAED>43200.00</TotalOutstandingAED>
+    <ActiveLoans>2</ActiveLoans>
+  </CreditReport>
+
+  <CreditReport>
+    <ReportRef>AECB-RPT-20250401-000003</ReportRef>
+    <ReportDate>2025-04-01</ReportDate>
+    <Subject>
+      <EmiratesId>784-1985-3456789-3</EmiratesId>
+      <FullName>Rajesh Kumar</FullName>
+      <DateOfBirth>1985-11-30</DateOfBirth>
+    </Subject>
+    <CreditScore>705</CreditScore>
+    <TotalOutstandingAED>98750.75</TotalOutstandingAED>
+    <ActiveLoans>4</ActiveLoans>
+  </CreditReport>
+
+  <CreditReport>
+    <ReportRef>AECB-RPT-20250401-000004</ReportRef>
+    <ReportDate>2025-04-01</ReportDate>
+    <Subject>
+      <EmiratesId>784-1995-4567890-4</EmiratesId>
+      <FullName>Sara Abdullah</FullName>
+      <DateOfBirth>1995-01-09</DateOfBirth>
+    </Subject>
+    <CreditScore>612</CreditScore>
+    <TotalOutstandingAED>12500.00</TotalOutstandingAED>
+    <ActiveLoans>1</ActiveLoans>
+  </CreditReport>
+
+  <CreditReport>
+    <ReportRef>AECB-RPT-20250401-000005</ReportRef>
+    <ReportDate>2025-04-01</ReportDate>
+    <Subject>
+      <EmiratesId>784-1979-5678901-5</EmiratesId>
+      <FullName>Mohammed Ali</FullName>
+      <DateOfBirth>1979-06-18</DateOfBirth>
+    </Subject>
+    <CreditScore>811</CreditScore>
+    <TotalOutstandingAED>256000.00</TotalOutstandingAED>
+    <ActiveLoans>5</ActiveLoans>
+  </CreditReport>
+
+  <CreditReport>
+    <ReportRef>AECB-RPT-20250401-000006</ReportRef>
+    <ReportDate>2025-04-01</ReportDate>
+    <Subject>
+      <EmiratesId>784-1990-6789012-6</EmiratesId>
+      <FullName>Priya Nair</FullName>
+      <DateOfBirth>1990-09-03</DateOfBirth>
+    </Subject>
+    <CreditScore>669</CreditScore>
+    <TotalOutstandingAED>31000.25</TotalOutstandingAED>
+    <ActiveLoans>2</ActiveLoans>
+  </CreditReport>
+
+  <CreditReport>
+    <ReportRef>AECB-RPT-20250401-000007</ReportRef>
+    <ReportDate>2025-04-01</ReportDate>
+    <Subject>
+      <EmiratesId>784-1983-7890123-7</EmiratesId>
+      <FullName>Omar Sheikh</FullName>
+      <DateOfBirth>1983-12-25</DateOfBirth>
+    </Subject>
+    <CreditScore>573</CreditScore>
+    <TotalOutstandingAED>187420.90</TotalOutstandingAED>
+    <ActiveLoans>6</ActiveLoans>
+  </CreditReport>
+
+</AECBCreditReportBatch>

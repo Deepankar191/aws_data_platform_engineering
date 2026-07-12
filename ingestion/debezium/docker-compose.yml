@@ -1,0 +1,126 @@
+# =============================================================================
+# Local end-to-end CDC path for the customer_profile identity spine (SPEC.md §2).
+#
+#   Postgres (wal_level=logical) --Debezium--> Kafka --S3 sink--> MinIO (S3)
+#                                                                  bronze/customer_profile/
+#
+# Bring up:   docker compose up -d
+# Seed:       docker compose exec -T postgres psql -U credit_app -d credit \
+#               < ../../sample_data/postgres/customer_profile_seed.sql
+# Register:   ENV=dev AWS_REGION=me-central-1 S3_STORE_URL=http://minio:9000 \
+#               ./register-connectors.sh
+#
+# NOTE: all credentials below are LOCAL-ONLY throwaways (see connect-secrets/pg.properties,
+# which is git-ignored). Real environments inject secrets via SSM / AWS Secrets Manager.
+# =============================================================================
+services:
+  postgres:
+    image: debezium/postgres:16
+    container_name: credit-postgres
+    environment:
+      POSTGRES_DB: credit
+      POSTGRES_USER: credit_app
+      POSTGRES_PASSWORD: local-only-not-a-real-secret
+    command:
+      - postgres
+      - -c
+      - wal_level=logical            # required for Debezium logical replication
+      - -c
+      - max_wal_senders=4
+      - -c
+      - max_replication_slots=4
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U credit_app -d credit"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    container_name: credit-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: credit-kafka
+    depends_on: [zookeeper]
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  # MinIO stands in for AWS S3 locally so the S3 sink has a target.
+  minio:
+    image: minio/minio:latest
+    container_name: credit-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: local-only-not-a-real-secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  # Creates the target bucket in MinIO once it is up.
+  minio-init:
+    image: minio/mc:latest
+    depends_on: [minio]
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc alias set local http://minio:9000 minioadmin local-only-not-a-real-secret) do sleep 2; done;
+      /usr/bin/mc mb -p local/wio-credit-decision-dev;
+      echo 'bucket ready'; "
+
+  connect:
+    image: debezium/connect:2.7
+    container_name: credit-connect
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      minio:
+        condition: service_started
+    ports:
+      - "8083:8083"
+    volumes:
+      # Local-only DB credentials for the FileConfigProvider (git-ignored dir).
+      - ./connect-secrets:/kafka/secrets:ro
+    environment:
+      BOOTSTRAP_SERVERS: kafka:29092
+      GROUP_ID: credit-connect-cluster
+      CONFIG_STORAGE_TOPIC: _connect_configs
+      OFFSET_STORAGE_TOPIC: _connect_offsets
+      STATUS_STORAGE_TOPIC: _connect_status
+      CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      STATUS_STORAGE_REPLICATION_FACTOR: 1
+      # Externalised-secret config provider (keeps credentials out of connector JSON).
+      CONNECT_CONFIG_PROVIDERS: file
+      CONNECT_CONFIG_PROVIDERS_FILE_CLASS: org.apache.kafka.common.config.provider.FileConfigProvider
+      # The S3 sink talks to MinIO; these are local-only creds.
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: local-only-not-a-real-secret
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "true"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "true"
+    # The Debezium image ships the Postgres source; install the Confluent S3 sink at start.
+    command:
+      - /bin/bash
+      - -c
+      - |
+        echo "Installing Confluent S3 sink connector plugin ...";
+        confluent-hub install --no-prompt --component-dir /kafka/connect \
+          confluentinc/kafka-connect-s3:10.5.13 || true;
+        echo "Starting Kafka Connect ...";
+        /docker-entrypoint.sh start

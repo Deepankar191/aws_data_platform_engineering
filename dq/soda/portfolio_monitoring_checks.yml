@@ -1,0 +1,62 @@
+# Soda Core checks — credit_gold.portfolio_monitoring_daily  (SPEC §9)
+# Grain: one row per snapshot_date × product_code × decision_outcome_band × risk_band.
+
+checks for portfolio_monitoring_daily:
+
+  # --- existence ---
+  - row_count > 0
+
+  # --- grain keys: completeness + composite uniqueness ---
+  - missing_count(snapshot_date) = 0
+  - missing_count(product_code) = 0
+  - missing_count(decision_outcome_band) = 0
+  - missing_count(risk_band) = 0
+  - duplicate_count(snapshot_date, product_code, decision_outcome_band, risk_band) = 0
+
+  # --- freshness: gold daily mart, allow 1h late arrival ---
+  - freshness(created_timestamp) < 25h
+
+  # --- numeric ranges (money is DECIMAL(18,2); no negatives) ---
+  - min(decision_count) >= 0
+  - min(approved_count) >= 0
+  - min(total_requested_amount_aed) >= 0
+  - min(total_approved_amount_aed) >= 0
+
+  # --- enum validity ---
+  - invalid_count(product_code) = 0:
+      valid values: ["PERSONAL_FINANCE", "BNPL", "CARD_ALT"]
+  - invalid_count(decision_outcome_band) = 0:
+      valid values: ["APPROVED", "DECLINED", "REVIEW", "UNKNOWN"]
+  - invalid_count(risk_band) = 0:
+      valid values: ["POOR", "FAIR", "GOOD", "VERY_GOOD", "EXCELLENT", "UNKNOWN"]
+
+  # --- business-rule cross-column checks ---
+  - failed rows:
+      name: approved_count_leq_decision_count
+      fail condition: approved_count > decision_count
+
+  - failed rows:
+      name: approval_rate_pct_within_bounds
+      fail condition: approval_rate_pct < 0 OR approval_rate_pct > 100
+
+  - failed rows:
+      name: aml_hit_rate_pct_within_bounds
+      fail condition: aml_hit_rate_pct < 0 OR aml_hit_rate_pct > 100
+
+  - failed rows:
+      name: pep_exposure_pct_within_bounds
+      fail condition: pep_exposure_pct < 0 OR pep_exposure_pct > 100
+
+  - failed rows:
+      name: avg_fraud_score_within_unit_interval
+      fail condition: avg_fraud_score IS NOT NULL AND (avg_fraud_score < 0 OR avg_fraud_score > 1)
+
+  - failed rows:
+      name: avg_aecb_credit_score_within_bureau_range
+      fail condition: >
+        avg_aecb_credit_score IS NOT NULL
+        AND (avg_aecb_credit_score < 300 OR avg_aecb_credit_score > 900)
+
+  - failed rows:
+      name: dq_score_within_bounds
+      fail condition: dq_score IS NOT NULL AND (dq_score < 0 OR dq_score > 100)

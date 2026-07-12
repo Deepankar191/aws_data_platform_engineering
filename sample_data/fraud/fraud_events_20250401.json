@@ -1,0 +1,59 @@
+[
+  {
+    "event_id": "FRD-20250401-0001",
+    "phone": "+971501234567",
+    "email": "ahmed.almansoori@example.ae",
+    "fraud_score": 0.0234,
+    "fraud_decision": "APPROVE",
+    "scored_at": "2025-04-01T06:15:00+04:00"
+  },
+  {
+    "event_id": "FRD-20250401-0002",
+    "phone": "+971502345678",
+    "email": "fatima.hassan@example.ae",
+    "fraud_score": 0.1180,
+    "fraud_decision": "APPROVE",
+    "scored_at": "2025-04-01T06:16:12+04:00"
+  },
+  {
+    "event_id": "FRD-20250401-0003",
+    "phone": "+971503456700",
+    "email": "rajesh.kumar@example.ae",
+    "fraud_score": 0.4720,
+    "fraud_decision": "REVIEW",
+    "scored_at": "2025-04-01T06:17:44+04:00",
+    "_note": "INTENTIONAL CONFLICT: phone differs from customer_profile_seed (+971503456789); email still matches -> single-key match -> probabilistic scorer per SPEC.md §6.3"
+  },
+  {
+    "event_id": "FRD-20250401-0004",
+    "phone": "+971504567890",
+    "email": "sara.abdullah@example.ae",
+    "fraud_score": 0.2015,
+    "fraud_decision": "APPROVE",
+    "scored_at": "2025-04-01T06:19:03+04:00"
+  },
+  {
+    "event_id": "FRD-20250401-0005",
+    "phone": "+971505678901",
+    "email": "mohammed.ali@example.ae",
+    "fraud_score": 0.0091,
+    "fraud_decision": "APPROVE",
+    "scored_at": "2025-04-01T06:20:31+04:00"
+  },
+  {
+    "event_id": "FRD-20250401-0006",
+    "phone": "+971506789012",
+    "email": "priya.nair@example.ae",
+    "fraud_score": 0.3345,
+    "fraud_decision": "REVIEW",
+    "scored_at": "2025-04-01T06:21:59+04:00"
+  },
+  {
+    "event_id": "FRD-20250401-0007",
+    "phone": "+971507890123",
+    "email": "omar.sheikh@example.ae",
+    "fraud_score": 0.8890,
+    "fraud_decision": "DECLINE",
+    "scored_at": "2025-04-01T06:23:20+04:00"
+  }
+]

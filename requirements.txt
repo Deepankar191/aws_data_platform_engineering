@@ -1,0 +1,60 @@
+# =============================================================================
+# Credit Decision Data Platform — project-level Python requirements
+# =============================================================================
+# The complete dependency set for the whole repo, pinned to the runtime targets
+# (Glue 4.0 / Spark 3.3, MWAA Airflow 2.8, Python 3.10–3.11). Per-component
+# requirements.txt files still exist for packaging a single unit (a Lambda zip, a
+# Glue bundle); this file is the union, for a full local dev / CI environment:
+#
+#     python3 -m venv .venv && source .venv/bin/activate
+#     pip install -r requirements.txt
+#
+# System (non-pip) deps: Graphviz `dot` (for `diagrams`); optional `pandoc` (PDFs).
+#
+# NOTE — Apache Airflow. Airflow must be installed with its official constraints
+# file or pip may resolve incompatible transitive versions. If you hit a resolver
+# conflict, install Airflow first, in its own step, then the rest:
+#   pip install "apache-airflow==2.8.4" \
+#     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.8.4/constraints-3.10.txt"
+# Airflow (MWAA) and Spark (Glue) are provided by the managed runtime in AWS — you
+# only need them locally to run/parse those layers.
+# =============================================================================
+
+# --- AWS SDK (ingestion S3/SSM; Lambda runtime also provides boto3) ----------
+boto3>=1.34,<2.0
+
+# --- Ingestion: AECB SFTP / Fraud REST / AML webhook (ingestion/*) -----------
+paramiko>=3.4,<4.0            # SFTP client for the AECB batch drop
+requests>=2.31,<3.0          # Fraud provider REST polling
+pyarrow>=15.0,<18.0          # Parquet writes to the bronze layer
+
+# --- Glue transforms: PySpark + Delta Lake (glue/**) -------------------------
+# Pinned to AWS Glue 4.0 = Spark 3.3. delta-spark 2.3 is the Delta build for Spark 3.3.
+pyspark==3.3.2
+delta-spark==2.3.0
+# NOTE: the `awsglue` library (glue_bootstrap / getResolvedOptions / GlueContext) is
+# NOT on PyPI — it ships only inside the AWS Glue runtime. To run Glue jobs locally,
+# use the official image `amazon/aws-glue-libs:glue_libs_4.0.0_image_01`, which bundles
+# awsglue + Spark 3.3 + Python 3.10. The `glue/common/` code degrades gracefully
+# (lazy awsglue import) so unit tests run without it.
+
+# --- Data quality: Soda Core checks (dq/soda/*.yml) --------------------------
+soda-core-spark-df>=3.3,<3.4
+
+# --- Orchestration: Airflow DAG (orchestration/airflow/**) -------------------
+# See the Airflow constraints note in the header before installing.
+apache-airflow>=2.8,<2.9
+apache-airflow-providers-amazon>=8.16,<9      # GlueJobOperator, S3KeySensor
+pendulum>=2.1,<4                              # DAG timezones; also an Airflow transitive dep
+
+# --- Tests (tests/) — default suite is pytest + stdlib only ------------------
+pytest>=7.4,<9
+
+# --- Docs: architecture PNG + both deliverable PDFs (docs/*) ------------------
+reportlab>=4.0               # architecture.pdf and execution_plan.pdf renderers
+diagrams==0.25.1             # AWS deployment-view PNG — also needs Graphviz system binary `dot`
+
+# --- Optional: alternative Markdown→HTML→PDF path (docs/*/build_pdf.py method 3)
+# Uncomment to use instead of reportlab. reportlab is the default and needs no system deps.
+# markdown>=3.5,<4.0
+# weasyprint>=60,<63

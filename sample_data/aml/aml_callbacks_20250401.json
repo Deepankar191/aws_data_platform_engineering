@@ -1,0 +1,59 @@
+[
+  {
+    "screening_ref": "AML-20250401-0001",
+    "full_name": "Ahmed Al Mansoori",
+    "date_of_birth": "1988-03-14",
+    "aml_status": "CLEAR",
+    "is_pep": false,
+    "screened_at": "2025-04-01T05:00:00+04:00"
+  },
+  {
+    "screening_ref": "AML-20250401-0002",
+    "full_name": "Fatima Hassan",
+    "date_of_birth": "1992-07-22",
+    "aml_status": "CLEAR",
+    "is_pep": false,
+    "screened_at": "2025-04-01T05:02:11+04:00"
+  },
+  {
+    "screening_ref": "AML-20250401-0003",
+    "full_name": "Rajesh Kumar",
+    "date_of_birth": "1985-11-30",
+    "aml_status": "PENDING",
+    "is_pep": false,
+    "screened_at": "2025-04-01T05:03:40+04:00"
+  },
+  {
+    "screening_ref": "AML-20250401-0004",
+    "full_name": "Sara Abdullah",
+    "date_of_birth": "1995-01-09",
+    "aml_status": "CLEAR",
+    "is_pep": false,
+    "screened_at": "2025-04-01T05:05:07+04:00"
+  },
+  {
+    "screening_ref": "AML-20250401-0005",
+    "full_name": "Mohammed Ali",
+    "date_of_birth": "1979-06-18",
+    "aml_status": "HIT",
+    "is_pep": true,
+    "screened_at": "2025-04-01T05:06:55+04:00"
+  },
+  {
+    "screening_ref": "AML-20250401-0006",
+    "full_name": "Priya Nair",
+    "date_of_birth": "1990-09-03",
+    "aml_status": "CLEAR",
+    "is_pep": false,
+    "screened_at": "2025-04-01T05:08:19+04:00"
+  },
+  {
+    "screening_ref": "AML-20250401-0007",
+    "full_name": "Omar Shaikh",
+    "date_of_birth": "1983-12-25",
+    "aml_status": "HIT",
+    "is_pep": false,
+    "screened_at": "2025-04-01T05:09:48+04:00",
+    "_note": "Surname spelled 'Shaikh' vs profile 'Sheikh' -> soundex(name)+dob fuzzy match, resolved by probabilistic scorer per SPEC.md §6.4"
+  }
+]

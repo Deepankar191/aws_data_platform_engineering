@@ -1,0 +1,71 @@
+# Soda Core checks — credit_silver.decision_input  (SPEC §5 / §8)
+# Mirrors the MUST-PASS thresholds enforced by glue/gold_layer/run_dq_scorecard_mart.py.
+# Ordering follows the Wio soda standard: existence -> PK completeness -> PK
+# uniqueness -> NOT NULL completeness -> freshness -> numeric ranges ->
+# accepted_values -> named failed-rows business rules.
+
+checks for decision_input:
+
+  # --- existence ---
+  - row_count > 0
+
+  # --- primary-key completeness + uniqueness (SPEC §8 must-pass) ---
+  - missing_count(decision_id) = 0
+  - duplicate_count(decision_id) = 0
+  - missing_count(application_id) = 0
+  - missing_count(master_customer_id) = 0
+
+  # --- other NOT NULL columns ---
+  - missing_count(product_code) = 0
+  - missing_count(decision_timestamp) = 0
+
+  # --- freshness: decision_input is near-real-time; allow 1h late arrival ---
+  - freshness(created_timestamp) < 25h
+
+  # --- numeric ranges ---
+  - min(fraud_score) >= 0
+  - min(input_completeness_score) >= 0
+
+  # --- enum validity (SPEC §5) ---
+  - invalid_count(product_code) = 0:
+      valid values: ["PERSONAL_FINANCE", "BNPL", "CARD_ALT"]
+  - invalid_count(fraud_decision) = 0:
+      valid values: ["APPROVE", "REVIEW", "DECLINE"]
+  - invalid_count(aml_status) = 0:
+      valid values: ["CLEAR", "HIT", "PENDING"]
+
+  # --- business-rule cross-column checks (SPEC §8 must-pass) ---
+  - failed rows:
+      name: fraud_score_within_unit_interval
+      fail condition: fraud_score IS NOT NULL AND (fraud_score < 0 OR fraud_score > 1)
+
+  - failed rows:
+      name: aecb_credit_score_within_bureau_range
+      fail condition: >
+        aecb_credit_score IS NOT NULL
+        AND (aecb_credit_score < 300 OR aecb_credit_score > 900)
+
+  - failed rows:
+      name: decision_timestamp_not_future
+      fail condition: decision_timestamp > current_timestamp()
+
+  - failed rows:
+      name: decision_timestamp_not_older_than_48h
+      fail condition: decision_timestamp < current_timestamp() - INTERVAL '48' HOUR
+
+  - failed rows:
+      name: master_customer_id_resolved
+      fail condition: master_customer_id = 'UNRESOLVED'
+
+  - failed rows:
+      name: input_completeness_within_unit_interval
+      fail condition: >
+        input_completeness_score < 0 OR input_completeness_score > 1
+
+  # --- WARN-tier advisory (SPEC §8, non-blocking) ---
+  # Ratio-style WARNs (≥95% of rows ≥0.75 completeness; AML PENDING ≤5%) are
+  # computed precisely by the Glue DQ job; here we surface the day's average
+  # completeness as a warn-only metric so it also dashboards in Soda Cloud.
+  - avg(input_completeness_score):
+      warn: when < 0.75
+      fail: when < 0.60

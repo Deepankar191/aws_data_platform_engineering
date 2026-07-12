@@ -1,0 +1,82 @@
+[
+  {
+    "decision_id": "d0000001-0000-4000-8000-000000000001",
+    "application_id": "APP-2025-000001",
+    "internal_customer_uuid": "11111111-1111-4111-8111-111111111111",
+    "product_code": "PERSONAL_FINANCE",
+    "decision_timestamp": "2025-04-01T09:30:00+04:00",
+    "requested_amount_aed": 150000.00,
+    "approved_amount_aed": 150000.00,
+    "decision_outcome": "APPROVED"
+  },
+  {
+    "decision_id": "d0000002-0000-4000-8000-000000000002",
+    "application_id": "APP-2025-000002",
+    "internal_customer_uuid": "22222222-2222-4222-8222-222222222222",
+    "product_code": "BNPL",
+    "decision_timestamp": "2025-04-01T10:05:00+04:00",
+    "requested_amount_aed": 5000.00,
+    "approved_amount_aed": 5000.00,
+    "decision_outcome": "APPROVED"
+  },
+  {
+    "decision_id": "d0000003-0000-4000-8000-000000000003",
+    "application_id": "APP-2025-000003",
+    "internal_customer_uuid": "33333333-3333-4333-8333-333333333333",
+    "product_code": "CARD_ALT",
+    "decision_timestamp": "2025-04-01T10:40:00+04:00",
+    "requested_amount_aed": 40000.00,
+    "approved_amount_aed": 25000.00,
+    "decision_outcome": "APPROVED"
+  },
+  {
+    "decision_id": "d0000004-0000-4000-8000-000000000004",
+    "application_id": "APP-2025-000004",
+    "internal_customer_uuid": "44444444-4444-4444-8444-444444444444",
+    "product_code": "PERSONAL_FINANCE",
+    "decision_timestamp": "2025-04-01T11:15:00+04:00",
+    "requested_amount_aed": 80000.00,
+    "approved_amount_aed": 0.00,
+    "decision_outcome": "REFERRED"
+  },
+  {
+    "decision_id": "d0000005-0000-4000-8000-000000000005",
+    "application_id": "APP-2025-000005",
+    "internal_customer_uuid": "55555555-5555-4555-8555-555555555555",
+    "product_code": "PERSONAL_FINANCE",
+    "decision_timestamp": "2025-04-01T12:00:00+04:00",
+    "requested_amount_aed": 250000.00,
+    "approved_amount_aed": 200000.00,
+    "decision_outcome": "APPROVED"
+  },
+  {
+    "decision_id": "d0000006-0000-4000-8000-000000000006",
+    "application_id": "APP-2025-000006",
+    "internal_customer_uuid": "66666666-6666-4666-8666-666666666666",
+    "product_code": "BNPL",
+    "decision_timestamp": "2025-04-01T13:20:00+04:00",
+    "requested_amount_aed": 8000.00,
+    "approved_amount_aed": 8000.00,
+    "decision_outcome": "APPROVED"
+  },
+  {
+    "decision_id": "d0000007-0000-4000-8000-000000000007",
+    "application_id": "APP-2025-000007",
+    "internal_customer_uuid": "77777777-7777-4777-8777-777777777777",
+    "product_code": "CARD_ALT",
+    "decision_timestamp": "2025-04-01T14:10:00+04:00",
+    "requested_amount_aed": 30000.00,
+    "approved_amount_aed": 0.00,
+    "decision_outcome": "DECLINED"
+  },
+  {
+    "decision_id": "d0000008-0000-4000-8000-000000000008",
+    "application_id": "APP-2025-000008",
+    "internal_customer_uuid": "33333333-3333-4333-8333-333333333333",
+    "product_code": "BNPL",
+    "decision_timestamp": "2025-04-01T15:45:00+04:00",
+    "requested_amount_aed": 3000.00,
+    "approved_amount_aed": 3000.00,
+    "decision_outcome": "APPROVED"
+  }
+]

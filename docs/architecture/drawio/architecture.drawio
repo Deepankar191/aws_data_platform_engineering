@@ -1,0 +1,833 @@
+<?xml version="1.0" ?>
+<mxfile host="app.diagrams.net" type="device" agent="generate_drawio.py">
+  <diagram id="1. End-to-end data flow" name="1. End-to-end data flow">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="g_src" value="① Four sources (§2)" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#f7f9fb;strokeColor=#aab7c4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="1040" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="g_ing" value="② Ingestion mechanisms" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#f7f9fb;strokeColor=#aab7c4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="120" width="1040" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="g_brz" value="③ Bronze — credit_bronze (§3)" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#fbf3e3;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="20" y="220" width="810" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="g_slv" value="④ Silver — credit_silver (Delta)" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#f1f6fb;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="320" width="810" height="490" as="geometry"/>
+        </mxCell>
+        <mxCell id="g_gold" value="⑥ Gold — credit_gold" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#eafaf1;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="20" y="920" width="600" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="AECB" value="UAE Credit Bureau (AECB)
+SFTP · XML
+key: emirates_id" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="FRAUD" value="Fraud provider
+REST poll · JSON
+key: phone + email" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="AML" value="AML / PEP screening
+Webhook · JSON
+key: full_name + dob" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="460" y="40" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="PG" value="Internal customer profile
+PostgreSQL / RDS
+spine: internal_customer_uuid" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="880" y="40" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="SFTPJOB" value="Glue batch job
+SFTP → parse XML → Parquet" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1f0fa;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="POLLJOB" value="Glue poll job
+REST GET → JSON → Parquet" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1f0fa;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="140" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="WEBHOOK" value="API Gateway + Lambda
+webhook → JSON → Parquet" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1f0fa;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="140" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="DBZ" value="Debezium PostgreSQL
+source connector" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fde2c4;strokeColor=#d67c1c;" vertex="1" parent="1">
+          <mxGeometry x="880" y="140" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="B_AECB" value="bronze/aecb (Parquet)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="B_FRAUD" value="bronze/fraud (Parquet)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="250" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="B_AML" value="bronze/aml (Parquet)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="460" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="MSK" value="MSK / Kafka
+cdc.public.customer_profile" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#fde2c4;strokeColor=#d67c1c;" vertex="1" parent="1">
+          <mxGeometry x="880" y="240" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="S_AECB" value="aecb_credit_report" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="S_FRAUD" value="fraud_score" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="250" y="340" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="S_AML" value="aml_screening" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="460" y="340" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="S3SINK" value="MSK Connect
+S3 sink (Delta)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fde2c4;strokeColor=#d67c1c;" vertex="1" parent="1">
+          <mxGeometry x="880" y="340" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="B_CP" value="bronze/customer_profile
+(Delta, CDC)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fde2c4;strokeColor=#d67c1c;" vertex="1" parent="1">
+          <mxGeometry x="880" y="440" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="S_CP" value="customer_profile (spine)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="880" y="540" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="IDR" value="Identity resolution (§6)
+deterministic → probabilistic" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fdebd0;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="250" y="440" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="XREF" value="customer_identity_xref
+golden record" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="250" y="540" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="DI" value="decision_input
+one row per decision_id (§5)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="250" y="640" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="SNAP" value="decision_input_snapshot
+immutable index (§7)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f9d0d0;strokeColor=#c0392b;" vertex="1" parent="1">
+          <mxGeometry x="40" y="740" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="OBJLOCK" value="S3 Object Lock bucket
+compliance · 7 yr (§7)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f9d0d0;strokeColor=#c0392b;" vertex="1" parent="1">
+          <mxGeometry x="460" y="740" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="MUSTPASS" value="MUST-PASS rules (§8)
+blocking" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fdebd0;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="670" y="640" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="QUAR" value="quarantine" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fcf3cf;strokeColor=#b7950b;" vertex="1" parent="1">
+          <mxGeometry x="670" y="740" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="PORT" value="portfolio_monitoring_daily (§9)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#d4efdf;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="40" y="940" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="DQSC" value="dq_scorecard_daily (§8)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#d4efdf;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="250" y="940" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="ATHENA" value="Amazon Athena
+(Glue catalog)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eaf2f8;strokeColor=#2874a6;" vertex="1" parent="1">
+          <mxGeometry x="670" y="940" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="META" value="Metabase — risk dashboards" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eaf2f8;strokeColor=#2874a6;" vertex="1" parent="1">
+          <mxGeometry x="880" y="940" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="SFTP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="AECB" target="SFTPJOB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="SFTPJOB" target="B_AECB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="poll" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="FRAUD" target="POLLJOB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="POLLJOB" target="B_FRAUD">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="push" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="AML" target="WEBHOOK">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="WEBHOOK" target="B_AML">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="WAL" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="PG" target="DBZ">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="produce" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="DBZ" target="MSK">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="consume" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="MSK" target="S3SINK">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="Delta write" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="S3SINK" target="B_CP">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="MERGE" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="B_CP" target="S_CP">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="Glue + bookmark" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="B_AECB" target="S_AECB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="Glue + bookmark" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="B_FRAUD" target="S_FRAUD">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="Glue + bookmark" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="B_AML" target="S_AML">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="spine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_CP" target="IDR">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_AECB" target="IDR">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_FRAUD" target="IDR">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_AML" target="IDR">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="IDR" target="XREF">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="XREF" target="DI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_AECB" target="DI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_FRAUD" target="DI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_AML" target="DI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S_CP" target="DI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="DI" target="SNAP">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e26" value="write raw JSON · WORM" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=3;endArrow=block;strokeColor=#c0392b;" edge="1" parent="1" source="SNAP" target="OBJLOCK">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e27" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="DI" target="MUSTPASS">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e28" value="fail" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="MUSTPASS" target="QUAR">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e29" value="pass → dq_pass=TRUE" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="MUSTPASS" target="PORT">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e30" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="DI" target="DQSC">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="PORT" target="ATHENA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e32" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="DQSC" target="ATHENA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="ATHENA" target="META">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="2. Medallion layers" name="2. Medallion layers">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="gB" value="Bronze — credit_bronze
+raw · append-only" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#fbf3e3;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="25" y="20" width="300" height="460" as="geometry"/>
+        </mxCell>
+        <mxCell id="gS" value="Silver — credit_silver
+cleaned · typed · PII-tagged · Delta" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#f1f6fb;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="385" y="20" width="300" height="640" as="geometry"/>
+        </mxCell>
+        <mxCell id="gG" value="Gold — credit_gold
+marts · natural keys · Delta" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#eafaf1;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="745" y="20" width="300" height="300" as="geometry"/>
+        </mxCell>
+        <mxCell id="b1" value="aecb
+Parquet · part. ingest_date" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="b2" value="fraud
+Parquet · part. ingest_date" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="b3" value="aml
+Parquet · part. ingest_date" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="b4" value="customer_profile
+Delta · CDC S3 sink" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s1" value="aecb_credit_report" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="60" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="fraud_score" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="140" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="aml_screening" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="220" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="customer_profile" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5" value="customer_identity_xref
+golden record (§6)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="380" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6" value="decision_input
+1 row / decision_id (§5)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="460" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s7" value="decision_input_snapshot
+immutable index (§7)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="400" y="540" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="g1" value="portfolio_monitoring_daily (§9)
+snapshot × product × outcome × risk" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#d4efdf;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="760" y="60" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="g2" value="dq_scorecard_daily (§8)
+per-day pass/fail + dq_score" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#d4efdf;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="760" y="140" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="b1" target="s1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="b2" target="s2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="b3" target="s3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="b4" target="s4">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s1" target="s5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s2" target="s5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s3" target="s5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s4" target="s5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s5" target="s6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s1" target="s6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s2" target="s6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s3" target="s6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s4" target="s6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s6" target="s7">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s6" target="g1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="s6" target="g2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="3. Identity resolution flow" name="3. Identity resolution flow">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="START" value="Source row to resolve
+(AECB / Fraud / AML)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="320" y="20" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="SPINE" value="Spine = PostgreSQL internal_customer_uuid
+master_customer_id = UUIDv5(internal_uuid)
+stable &amp; reproducible" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="620" y="20" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="DET" value="Deterministic match?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fdebd0;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="360" y="130" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ACCEPT" value="Accept
+match_confidence = 1.00
+match_method = DETERMINISTIC" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#d4efdf;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="PROB" value="Probabilistic scorer
+weighted Jaro-Winkler on name
++ exact on dob/phone/email/eid" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="360" y="250" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="MULTI" value="Candidates?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fdebd0;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="400" y="370" width="150" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="TAKEBEST" value="Take highest-scoring candidate
+record match_confidence" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#d4efdf;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="40" y="490" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="REVIEW" value="Attach BUT flag
+needs_manual_review = TRUE" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fcf3cf;strokeColor=#b7950b;" vertex="1" parent="1">
+          <mxGeometry x="340" y="490" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="UNRES" value="Create UNRESOLVED record
+master_customer_id = UNRESOLVED
+(no source data dropped)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f5b7b1;strokeColor=#c0392b;" vertex="1" parent="1">
+          <mxGeometry x="640" y="490" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="SURV" value="Conflicting attributes
+across sources?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fdebd0;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="340" y="610" width="170" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="SURVRULE" value="Survivorship:
+POSTGRES &gt; AECB &gt; FRAUD &gt; AML
+most-recent-timestamp wins in a tie" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="610" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="WRITE" value="Write to customer_identity_xref
+match_method · match_confidence · matched_on
+needs_manual_review · audit timestamps" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1ecf4;strokeColor=#2e6da4;" vertex="1" parent="1">
+          <mxGeometry x="320" y="730" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="XREFOUT" value="customer_identity_xref
+golden record, SCD2 history" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#d4efdf;strokeColor=#1e8449;" vertex="1" parent="1">
+          <mxGeometry x="340" y="840" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="START" target="DET">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="seeds" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=open;strokeColor=#7f8c8d;" edge="1" parent="1" source="SPINE" target="DET">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="EID exact / phone+email exact" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="DET" target="ACCEPT">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="partial / fuzzy · AML soundex+dob" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="DET" target="PROB">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="PROB" target="MULTI">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="best ≥ 0.85 (MATCH)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="MULTI" target="TAKEBEST">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="0.70 ≤ best &lt; 0.85 (REVIEW)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="MULTI" target="REVIEW">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="best &lt; 0.70" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="MULTI" target="UNRES">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="ACCEPT" target="SURV">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="TAKEBEST" target="SURV">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="REVIEW" target="SURV">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="yes" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="SURV" target="SURVRULE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="SURV" target="WRITE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="SURVRULE" target="WRITE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="UNRES" target="WRITE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="WRITE" target="XREFOUT">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="4. AWS deployment view" name="4. AWS deployment view">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="gEXT" value="External" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#f4f6f7;strokeColor=#7f8c8d;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="220" height="320" as="geometry"/>
+        </mxCell>
+        <mxCell id="gAWS" value="AWS — me-central-1 (data residency)" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#fffaf2;strokeColor=#e67e22;" vertex="1" parent="1">
+          <mxGeometry x="280" y="20" width="1120" height="820" as="geometry"/>
+        </mxCell>
+        <mxCell id="gNET" value="VPC (private subnets · NAT egress)" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#f3f9ff;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="60" width="700" height="470" as="geometry"/>
+        </mxCell>
+        <mxCell id="gCMP" value="Compute" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#f3f9ff;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="360" width="420" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="gS3" value="Amazon S3" style="rounded=1;html=1;verticalAlign=top;fontStyle=1;fontSize=12;arcSize=4;fillColor=#fffaf2;strokeColor=#e67e22;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="60" width="350" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="AECBEXT" value="AECB SFTP endpoint" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="40" y="60" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="FRAUDEXT" value="Fraud REST API" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="40" y="150" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="AMLEXT" value="AML provider (webhook)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="APIGW" value="API Gateway
+(AML webhook)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eef7ff;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="100" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="LAMBDA" value="Lambda
+webhook receiver" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eef7ff;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="180" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="RDS" value="RDS PostgreSQL
+identity spine" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#e8eaed;strokeColor=#5f6368;" vertex="1" parent="1">
+          <mxGeometry x="540" y="100" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="DBZ" value="MSK Connect
+Debezium source" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fde2c4;strokeColor=#d67c1c;" vertex="1" parent="1">
+          <mxGeometry x="540" y="180" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="MSK" value="Amazon MSK (Kafka)" style="shape=hexagon;whiteSpace=wrap;html=1;fillColor=#fde2c4;strokeColor=#d67c1c;" vertex="1" parent="1">
+          <mxGeometry x="540" y="260" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="S3SINK" value="MSK Connect
+S3 sink" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fde2c4;strokeColor=#d67c1c;" vertex="1" parent="1">
+          <mxGeometry x="760" y="180" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="META" value="Metabase on ECS Fargate" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eaf2f8;strokeColor=#2874a6;" vertex="1" parent="1">
+          <mxGeometry x="760" y="260" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="GLUE" value="AWS Glue jobs
+(PySpark, bookmarks) → EMR" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1f0fa;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="400" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="GLUECAT" value="Glue Data Catalog
+credit_bronze/silver/gold" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#e1f0fa;strokeColor=#2e86c1;" vertex="1" parent="1">
+          <mxGeometry x="540" y="400" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="S3DATA" value="s3://wio-credit-decision-ENV
+bronze / silver / gold" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f6e7c9;strokeColor=#b9770e;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="100" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="S3LOCK" value="Snapshot bucket
+Object Lock · 7-yr WORM (§7)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#f9d0d0;strokeColor=#c0392b;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="180" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="ATHENA" value="Amazon Athena
+(serverless SQL)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eaf2f8;strokeColor=#2874a6;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="300" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="SNS" value="Amazon SNS
+DQ + pipeline alerts (§8)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eaf2f8;strokeColor=#2874a6;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="380" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="IAM" value="IAM
+least-privilege roles" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="320" y="560" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="KMS" value="AWS KMS
+SSE-KMS encryption" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="540" y="560" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="AIRFLOW" value="Amazon MWAA (Airflow)
+orchestration" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#eaf2f8;strokeColor=#2874a6;" vertex="1" parent="1">
+          <mxGeometry x="760" y="400" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="CW" value="CloudWatch
+logs · metrics · alarms" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#ffffff;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="460" width="190" height="56" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="SFTP" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="AECBEXT" target="GLUE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="HTTPS poll" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="FRAUDEXT" target="GLUE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="HTTPS webhook" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="AMLEXT" target="APIGW">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="APIGW" target="LAMBDA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="LAMBDA" target="S3DATA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="WAL" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="RDS" target="DBZ">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="DBZ" target="MSK">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="MSK" target="S3SINK">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=block;strokeColor=#d67c1c;" edge="1" parent="1" source="S3SINK" target="S3DATA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="GLUE" target="S3DATA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="GLUE" target="GLUECAT">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="immutable JSON" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=3;endArrow=block;strokeColor=#c0392b;" edge="1" parent="1" source="GLUE" target="S3LOCK">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="GLUECAT" target="ATHENA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="S3DATA" target="ATHENA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="ATHENA" target="META">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="GLUE" target="SNS">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="AIRFLOW" target="GLUE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="AIRFLOW" target="DBZ">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e19" value="governs" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=open;strokeColor=#7f8c8d;" edge="1" parent="1" source="IAM" target="GLUE">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e20" value="encrypts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=open;strokeColor=#7f8c8d;" edge="1" parent="1" source="KMS" target="RDS">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e21" value="encrypts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=open;strokeColor=#7f8c8d;" edge="1" parent="1" source="KMS" target="S3DATA">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e22" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="GLUE" target="CW">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1" source="LAMBDA" target="CW">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="5. Audit-snapshot sequence" name="5. Audit-snapshot sequence">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="ORCH" value="MWAA (Airflow)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="180" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" value="" style="html=1;endArrow=none;dashed=1;strokeColor=#9aa7b4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130.0" y="66" as="sourcePoint"/>
+            <mxPoint x="130.0" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GLUE" value="Glue decision-assembly job" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="240" y="20" width="180" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" value="" style="html=1;endArrow=none;dashed=1;strokeColor=#9aa7b4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="66" as="sourcePoint"/>
+            <mxPoint x="330.0" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XREF" value="customer_identity_xref" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="20" width="180" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" value="" style="html=1;endArrow=none;dashed=1;strokeColor=#9aa7b4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530.0" y="66" as="sourcePoint"/>
+            <mxPoint x="530.0" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SRC" value="Silver source tables
+(aecb/fraud/aml/profile)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="640" y="20" width="180" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" value="" style="html=1;endArrow=none;dashed=1;strokeColor=#9aa7b4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730.0" y="66" as="sourcePoint"/>
+            <mxPoint x="730.0" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="LOCK" value="S3 Object-Lock bucket
+(compliance, 7 yr)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="840" y="20" width="180" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" value="" style="html=1;endArrow=none;dashed=1;strokeColor=#9aa7b4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="930.0" y="66" as="sourcePoint"/>
+            <mxPoint x="930.0" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DELTA" value="decision_input_snapshot
+(Delta index)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="20" width="180" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" value="" style="html=1;endArrow=none;dashed=1;strokeColor=#9aa7b4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1130.0" y="66" as="sourcePoint"/>
+            <mxPoint x="1130.0" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DI" value="decision_input (Delta)" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="20" width="180" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" value="" style="html=1;endArrow=none;dashed=1;strokeColor=#9aa7b4;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1330.0" y="66" as="sourcePoint"/>
+            <mxPoint x="1330.0" y="900" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" value="1: trigger decision assembly (batch_id)" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130.0" y="106" as="sourcePoint"/>
+            <mxPoint x="330.0" y="106" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" value="2: resolve master_customer_id" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="152" as="sourcePoint"/>
+            <mxPoint x="530.0" y="152" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" value="3: master_customer_id (+ match metadata)" style="html=1;endArrow=open;dashed=1;strokeColor=#7f8c8d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530.0" y="198" as="sourcePoint"/>
+            <mxPoint x="330.0" y="198" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" value="4: fetch RAW records (verbatim + bronze URIs)" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="244" as="sourcePoint"/>
+            <mxPoint x="730.0" y="244" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" value="5: raw records + record hashes" style="html=1;endArrow=open;dashed=1;strokeColor=#7f8c8d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730.0" y="290" as="sourcePoint"/>
+            <mxPoint x="330.0" y="290" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e13" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="336" as="sourcePoint"/>
+            <mxPoint x="450.0" y="336" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e14" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450.0" y="336" as="sourcePoint"/>
+            <mxPoint x="450.0" y="354" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e15" value="6: assemble snapshot JSON" style="html=1;endArrow=open;dashed=1;strokeColor=#7f8c8d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450.0" y="354" as="sourcePoint"/>
+            <mxPoint x="330.0" y="354" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e16" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="400" as="sourcePoint"/>
+            <mxPoint x="450.0" y="400" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450.0" y="400" as="sourcePoint"/>
+            <mxPoint x="450.0" y="418" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e18" value="7: compute content_sha256(snapshot.json)" style="html=1;endArrow=open;dashed=1;strokeColor=#7f8c8d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="450.0" y="418" as="sourcePoint"/>
+            <mxPoint x="330.0" y="418" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19" value="8: PUT snapshot.json · retain-until now+7yr" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="464" as="sourcePoint"/>
+            <mxPoint x="930.0" y="464" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e20" value="9: versionId + ETag (WORM)" style="html=1;endArrow=open;dashed=1;strokeColor=#7f8c8d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="930.0" y="510" as="sourcePoint"/>
+            <mxPoint x="330.0" y="510" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21" value="10: write {decision_id, snapshot_s3_uri, content_sha256}" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="556" as="sourcePoint"/>
+            <mxPoint x="1130.0" y="556" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e22" value="11: write decision_input row (snapshot_s3_uri)" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330.0" y="602" as="sourcePoint"/>
+            <mxPoint x="1330.0" y="602" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e23" value="12: GET snapshot.json  [audit / tamper check]" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130.0" y="648" as="sourcePoint"/>
+            <mxPoint x="930.0" y="648" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e24" value="13: bytes" style="html=1;endArrow=open;dashed=1;strokeColor=#7f8c8d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="930.0" y="694" as="sourcePoint"/>
+            <mxPoint x="130.0" y="694" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e25" value="14: read stored content_sha256" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130.0" y="740" as="sourcePoint"/>
+            <mxPoint x="1130.0" y="740" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e26" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="130.0" y="786" as="sourcePoint"/>
+            <mxPoint x="250.0" y="786" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e27" value="" style="html=1;endArrow=block;endFill=1;strokeColor=#42556b;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250.0" y="786" as="sourcePoint"/>
+            <mxPoint x="250.0" y="804" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e28" value="15: sha256(bytes) == stored? integrity / tamper" style="html=1;endArrow=open;dashed=1;strokeColor=#7f8c8d;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="250.0" y="804" as="sourcePoint"/>
+            <mxPoint x="130.0" y="804" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NOTE1" value="The S3 object is the LEGAL record.
+The Delta row is the queryable INDEX." style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#fcf3cf;strokeColor=#b7950b;" vertex="1" parent="1">
+          <mxGeometry x="840.0" y="840" width="260" height="44" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

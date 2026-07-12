@@ -1,0 +1,48 @@
+{
+  "name": "credit-customer-profile-source",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+
+    "database.hostname": "postgres",
+    "database.port": "5432",
+    "database.user": "${file:/kafka/secrets/pg.properties:username}",
+    "database.password": "${file:/kafka/secrets/pg.properties:password}",
+    "database.dbname": "credit",
+
+    "topic.prefix": "credit",
+    "plugin.name": "pgoutput",
+    "slot.name": "credit_customer_profile_slot",
+    "publication.name": "credit_customer_profile_pub",
+    "publication.autocreate.mode": "filtered",
+
+    "schema.include.list": "public",
+    "table.include.list": "public.customer_profile",
+
+    "snapshot.mode": "initial",
+    "decimal.handling.mode": "string",
+    "time.precision.mode": "connect",
+    "tombstones.on.delete": "false",
+
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "true",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "true",
+
+    "heartbeat.interval.ms": "10000",
+    "topic.creation.enable": "true",
+    "topic.creation.default.replication.factor": "1",
+    "topic.creation.default.partitions": "1",
+    "topic.creation.default.cleanup.policy": "delete",
+    "topic.creation.default.retention.ms": "604800000",
+
+    "transforms": "unwrapMeta",
+    "transforms.unwrapMeta.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.unwrapMeta.static.field": "cdc_source",
+    "transforms.unwrapMeta.static.value": "postgres_customer_profile",
+
+    "errors.tolerance": "none",
+    "errors.log.enable": "true",
+    "errors.log.include.messages": "true"
+  }
+}

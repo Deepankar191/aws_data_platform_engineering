@@ -1,0 +1,10 @@
+# Rendering the AWS deployment view PNG (docs/architecture/generate_diagram.py)
+#
+# Also requires the Graphviz SYSTEM binary `dot` (not a pip package):
+#   macOS:          brew install graphviz
+#   Debian/Ubuntu:  sudo apt-get install graphviz
+#
+diagrams==0.25.1
+
+# Building architecture.pdf (docs/architecture/build_pdf.py)
+reportlab>=4.0

@@ -1,0 +1,4 @@
+# Never commit real credential material. The committed pg.properties holds only
+# local-only throwaway values; treat this dir as secret in real environments.
+connect-secrets/*.properties
+!connect-secrets/pg.properties

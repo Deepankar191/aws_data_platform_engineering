@@ -1,0 +1,8 @@
+# Test dependencies. The default suite (text-match, sample-data integrity, DDL
+# consistency) runs on pytest + stdlib only — no Spark, no AWS.
+pytest>=7.4,<9
+
+# Optional: install to run the Spark-backed transformation tests locally. The
+# suite skips them automatically when pyspark is not importable.
+# pyspark==3.3.2
+# delta-spark==2.3.0

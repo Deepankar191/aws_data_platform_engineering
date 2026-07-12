@@ -1,0 +1,12 @@
+# Building execution_plan.pdf (docs/execution-plan/build_pdf.py)
+#
+# The script tries pandoc first (system binary, not pip), then reportlab, then
+# markdown+weasyprint. Only ONE of these needs to be present. reportlab is the
+# most self-contained (pure pip, no system deps) and is what the script installs
+# into a local .venv automatically if nothing else is available.
+#
+reportlab>=4.0
+
+# Optional alternative HTML->PDF path (uncomment to use method 3):
+# markdown>=3.5
+# weasyprint>=60

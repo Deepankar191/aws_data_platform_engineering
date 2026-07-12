@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+.eggs/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+crash.log
+
+# Spark / Glue local
+spark-warehouse/
+metastore_db/
+derby.log
+*.crc
+_delta_log/
+
+# Data (do not commit generated data / large artefacts)
+/tmp_output/
+*.parquet
+!sample_data/**/*.parquet
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Build artefacts we DO want to keep are force-added in docs (pdf/png)
