@@ -1,0 +1,2 @@
+# Building design_explanation.pdf (Part 3 IFRS 9 deliverable)
+reportlab>=4.0

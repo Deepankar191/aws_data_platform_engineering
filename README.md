@@ -50,6 +50,7 @@ Full diagrams (data flow, medallion, identity resolution, AWS deployment, audit 
 | `docs/architecture/` | **Deliverable 1** — architecture diagrams (mermaid + diagrams-as-code PNG) |
 | `docs/execution-plan/` | **Deliverable 3** — 30/60/90-day execution plan (`.md` + `.pdf`) |
 | `docs/trade-offs-and-readiness-analysis/` | **Part 2 deliverable** — Trade-offs & Readiness Analysis (`.md` + `.pdf`) |
+| `docs/ifrs9-ecl-model/` | **Part 3 deliverable** — IFRS 9 ECL provisioning data model: SQL schema + sample queries + runnable DuckDB demo + 1-page design explanation |
 | `docs/data-model/` | Data model — layer model, ER diagram, grain/PK catalog, identity model, PII matrix |
 | `tests/` | pytest suite — identity algorithm, sample-data linkage, DDL-convention checks (no Spark needed) |
 | `ingestion/debezium/` | PostgreSQL CDC: Debezium source + S3 sink connector configs, local docker-compose |
