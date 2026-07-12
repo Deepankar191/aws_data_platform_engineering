@@ -49,6 +49,7 @@ Full diagrams (data flow, medallion, identity resolution, AWS deployment, audit 
 | `docs/SPEC.md` | **Single source of truth** — contracts, paths, thresholds, naming |
 | `docs/architecture/` | **Deliverable 1** — architecture diagrams (mermaid + diagrams-as-code PNG) |
 | `docs/execution-plan/` | **Deliverable 3** — 30/60/90-day execution plan (`.md` + `.pdf`) |
+| `docs/trade-offs-and-readiness-analysis/` | **Part 2 deliverable** — Trade-offs & Readiness Analysis (`.md` + `.pdf`) |
 | `docs/data-model/` | Data model — layer model, ER diagram, grain/PK catalog, identity model, PII matrix |
 | `tests/` | pytest suite — identity algorithm, sample-data linkage, DDL-convention checks (no Spark needed) |
 | `ingestion/debezium/` | PostgreSQL CDC: Debezium source + S3 sink connector configs, local docker-compose |

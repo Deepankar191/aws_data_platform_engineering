@@ -1,0 +1,2 @@
+# Building trade_offs_and_readiness_analysis.pdf (Part 2 deliverable)
+reportlab>=4.0
