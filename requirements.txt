@@ -50,9 +50,12 @@ pendulum>=2.1,<4                              # DAG timezones; also an Airflow t
 # --- Tests (tests/) — default suite is pytest + stdlib only ------------------
 pytest>=7.4,<9
 
-# --- Docs: architecture PNG + both deliverable PDFs (docs/*) ------------------
-reportlab>=4.0               # architecture.pdf and execution_plan.pdf renderers
+# --- Docs: architecture PNG + deliverable PDFs (docs/*) ----------------------
+reportlab>=4.0               # architecture / execution-plan / analysis / IFRS9 PDF renderers
 diagrams==0.25.1             # AWS deployment-view PNG — also needs Graphviz system binary `dot`
+
+# --- Part 3: IFRS 9 ECL model runnable demo (docs/ifrs9-ecl-model/) -----------
+duckdb>=1.0                  # runs schema + sample queries locally (docs/ifrs9-ecl-model/run_demo.py)
 
 # --- Optional: alternative Markdown→HTML→PDF path (docs/*/build_pdf.py method 3)
 # Uncomment to use instead of reportlab. reportlab is the default and needs no system deps.
